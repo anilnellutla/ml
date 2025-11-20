@@ -2,3 +2,6 @@ main
 dynarray
 a.out
 *.dSYM
+gates
+twice
+xor
