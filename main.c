@@ -34,9 +34,9 @@ float cost(float w, float b)
 }
 int main()
 {
-    //srand(time(0));
-    srand(69);
-    //y = X*W;
+    srand(time(0));
+    // srand(69);
+    //y = x*w;
     float w = rand_float()*10.0f;
     float b = rand_float()*5.0f;
     printf("w: %f\n", w);

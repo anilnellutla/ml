@@ -71,6 +71,9 @@ float cost(Xor m)
     for(size_t i =0; i < train_count; ++i) {
         float x1 = train[i][0];
         float x2 = train[i][1];
+        // float a = sigmoidf(m.or_w1*x1 + m.or_w2*x2 + m.or_b);
+        // float b = sigmoidf(m.nand_w1*x1 + m.nand_w2*x2 + m.nand_b);
+        // float y = sigmoidf(a*m.and_w1 + b*m.and_w2 + m.and_b);
         float y = forward(m, x1, x2);
         float d = y - train[i][2];
         result += d*d;
