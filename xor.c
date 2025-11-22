@@ -113,7 +113,7 @@ void print_xor(Xor m) {
     printf("nand_b = %f\n", m.nand_b);
 
     printf("and_w1 = %f\n", m.and_w1);
-    printf("and_w2 = %f\n", m.and_w2);
+    printf("and_w2 = %f\n", m.and_w2) ;
     printf("and_b = %f\n", m.and_b);
 }
 
