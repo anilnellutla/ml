@@ -151,44 +151,69 @@ int main(void) {
     MAT_PRINT(ti);
     MAT_PRINT(to);
 
-    Xor m = xor_alloc();
-    Xor g = xor_alloc();
-
-    mat_rand(m.w1, 0, 1);
-    mat_rand(m.b1, 0, 1);
-    mat_rand(m.w2, 0, 1);
-    mat_rand(m.b2, 0, 1);
-
-    MAT_PRINT(m.a0);
-    MAT_PRINT(m.w1);
-    MAT_PRINT(m.b1);
-    MAT_PRINT(m.w2);
-    MAT_PRINT(m.b2);
-
-    // float x1 = 0;
-    // float x2 = 1;
-    // float y = forward_xor(m, x1, x2);
-    // printf("y=%f\n", y);
+    size_t arch[] = {2, 2, 1}; // 2 inputs, 2 hidden, 1 output
+    NN nn = nn_alloc(arch, ARRAY_LEN(arch));
+    NN g = nn_alloc(arch, ARRAY_LEN(arch));
+    nn_rand(nn, 0, 1);
+    NN_PRINT(nn);
 
     float eps = 1e-1;
     float rate = 1e-1;
-    printf("cost = %f\n", cost(m, ti, to));
+
+    Mat row = mat_row(ti, 1);
+    MAT_PRINT(row);
+    mat_copy(NN_INPUT(nn), row);
+    // nn_forward(nn);
+    // MAT_PRINT(NN_OUTPUT(nn));
+
+    printf("cost = %f\n", nn_cost(nn, ti, to));
     for (size_t i = 0; i < 100*1000; ++i) {
-        finite_diff(m, g, eps, ti, to);
-        xor_learn(m, g, rate);
-        printf("%zu: cost = %f\n", i, cost(m, ti, to));
+        nn_finite_diff(nn, g, eps, ti, to);
+        nn_learn(nn, g, rate);
+        printf("%zu: cost = %f\n", i, nn_cost(nn, ti, to));
     }
 
-    printf("---------------------\n");
-    for(size_t i = 0; i < 2; ++i) {
-        for(size_t j = 0; j <2; ++j) {
-            MAT_AT(m.a0, 0, 0) = i;
-            MAT_AT(m.a0, 0, 1) = j;
-            forward_xor(m);
-            float y = *m.a2.es;
-            printf("%zu ^ %zu = %f\n", i, j, y);
+    for (size_t i = 0; i < 2; ++i) {
+        for (size_t j = 0; j < 2; ++j) {
+            MAT_AT(NN_INPUT(nn), 0, 0) = i;
+            MAT_AT(NN_INPUT(nn), 0, 1) = j;
+            nn_forward(nn);
+            printf("%zu ^ %zu = %f\n", i, j, MAT_AT(NN_OUTPUT(nn), 0, 0));
         }
     }
-
     return 0;
+
+    // Xor m = xor_alloc();
+    // Xor g = xor_alloc();
+
+    // mat_rand(m.w1, 0, 1);
+    // mat_rand(m.b1, 0, 1);
+    // mat_rand(m.w2, 0, 1);
+    // mat_rand(m.b2, 0, 1);
+
+    // MAT_PRINT(m.a0);
+    // MAT_PRINT(m.w1);
+    // MAT_PRINT(m.b1);
+    // MAT_PRINT(m.w2);
+    // MAT_PRINT(m.b2);
+
+    // printf("cost = %f\n", cost(m, ti, to));
+    // for (size_t i = 0; i < 100*1000; ++i) {
+    //     finite_diff(m, g, eps, ti, to);
+    //     xor_learn(m, g, rate);
+    //     printf("%zu: cost = %f\n", i, cost(m, ti, to));
+    // }
+
+    // printf("---------------------\n");
+    // for(size_t i = 0; i < 2; ++i) {
+    //     for(size_t j = 0; j <2; ++j) {
+    //         MAT_AT(m.a0, 0, 0) = i;
+    //         MAT_AT(m.a0, 0, 1) = j;
+    //         forward_xor(m);
+    //         float y = *m.a2.es;
+    //         printf("%zu ^ %zu = %f\n", i, j, y);
+    //     }
+    // }
+
+    // return 0;
 }
