@@ -36,7 +36,6 @@ int main(void) {
     NN nn = nn_alloc(arch, ARRAY_LEN(arch));
     NN g = nn_alloc(arch, ARRAY_LEN(arch));
     nn_rand(nn, 0, 1);
-    NN_PRINT(nn);
 
     float eps = 1e-1;
     float rate = 1e-1;
@@ -53,6 +52,8 @@ int main(void) {
         nn_learn(nn, g, rate);
         printf("%zu: cost = %f\n", i, nn_cost(nn, ti, to));
     }
+
+    NN_PRINT(nn);
 
     for (size_t i = 0; i < 2; ++i) {
         for (size_t j = 0; j < 2; ++j) {
